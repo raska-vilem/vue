@@ -12,7 +12,7 @@ const PACKAGE_NAME: &str = "@vue/language-server";
 const TYPESCRIPT_PACKAGE_NAME: &str = "typescript";
 
 /// The relative path to TypeScript's SDK.
-const TYPESCRIPT_TSDK_PATH: &str = "node_modules/typescript/lib";
+const TYPESCRIPT_TSDK_PATH: &str = ".yarn/sdks/typescript/lib";
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -48,8 +48,8 @@ impl VueExtension {
             language_server_id,
             &zed::LanguageServerInstallationStatus::CheckingForUpdate,
         );
-        // We hardcode the version to 1.8 since we do not support @vue/language-server 2.0 yet.
-        let version = "1.8".to_string();
+
+	let version = zed::npm_package_latest_version(PACKAGE_NAME)?;
 
         if !server_exists
             || zed::npm_package_installed_version(PACKAGE_NAME)?.as_ref() != Some(&version)
